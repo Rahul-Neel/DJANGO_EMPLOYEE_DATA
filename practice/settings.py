@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+import django
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-(t)wfwsuoq22-ckcbb(=sy#%oc=h-kp+76_bxunq^q%c#i46(5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django-employee-data.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -134,3 +135,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR /'media' 
+
+
+
+
+
+
+if os.getenv('RENDER', None):  # Only run on Render
+    django.setup()
+    from django.contrib.auth.models import User
+    username = os.getenv("DJANGO_SUPERUSER_USERNAME", "admin")
+    email = os.getenv("DJANGO_SUPERUSER_EMAIL", "admin@example.com")
+    password = os.getenv("DJANGO_SUPERUSER_PASSWORD", "adminpassword123")
+    if not User.objects.filter(username=username).exists():
+        User.objects.create_superuser(username=username, email=email, password=password)
+
