@@ -1,1 +1,3 @@
-web: gunicorn employee_project.wsgi
+web: gunicorn practice.wsgi:application
+
+
